@@ -30,7 +30,7 @@ function print_status ()
 function check_root
 {
     if [ "$(id -u)" != "0" ]; then
-        print_error "This step must be ran as root"
+        print_error "This step must be run as root!"
         exit 1
     fi
 }
@@ -40,7 +40,7 @@ function check_postgresql
 {
   if [ -d /usr/local/share/postgresql ]; then
     print_error "A previous version of PostgreSQL was found on the system."
-    print_error "remove the prevous version and files and run script again."
+    print_error "Remove the prevous version and files and run script again."
     exit 1
   fi
 }
@@ -134,7 +134,11 @@ function check_for_brew_osx
     else
 
         print_status "Installing Homebrew"
+<<<<<<< Updated upstream
          /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+=======
+         /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+>>>>>>> Stashed changes
         if [ "$(grep ":/usr/local/sbin" ~/.bash_profile -q)" ]; then
             print_good "Paths are properly set"
         else
@@ -143,6 +147,8 @@ function check_for_brew_osx
             source  ~/.bash_profile
         fi
     fi
+    print_good "Now running Homebrew doctor."
+    /usr/local/bin/brew doctor >> $LOGFILE 2>&1
 }
 ########################################
 
@@ -167,9 +173,10 @@ function check_dependencies_osx
     fi
 
     if [[ $PKGS =~ com.apple.pkg.DeveloperToolsCLI || $PKGS =~ com.apple.pkg.CLTools_Executables ]] ; then
-        print_good "Command Line Development Tools is intalled."
+        print_good "Command Line Development Tools bundle is installed."
     else
-        print_error "Command Line Development Tools is not installed on this system."
+        print_error "Command Line Development Tools bundle is not installed on this system."
+        xcode-select --install
         exit 1
     fi
 }
@@ -272,7 +279,7 @@ function install_msf_osx
         cd /usr/local/share/metasploit-framework
         for MSF in $(ls msf*); do
             print_status "linking $MSF command"
-        ln -s /usr/local/share/metasploit-framework/$MSF /usr/local/bin/$MSF
+            ln -s /usr/local/share/metasploit-framework/$MSF /usr/local/bin/$MSF
         done
         print_status "Creating Database configuration YAML file."
         echo 'production:
@@ -284,7 +291,7 @@ function install_msf_osx
  port: 5432
  pool: 75
  timeout: 5' > /usr/local/share/metasploit-framework/config/database.yml
-        print_status "setting environment variable in system profile. Password will be requiered"
+        print_status "Setting environment variable in system profile; Password will be required."
         sudo sh -c "echo export MSF_DATABASE_CONFIG=/usr/local/share/metasploit-framework/config/database.yml >> /etc/profile"
         echo "export MSF_DATABASE_CONFIG=/usr/local/share/metasploit-framework/config/database.yml" >> ~/.bash_profile
         source /etc/profile
@@ -308,6 +315,17 @@ function install_msf_osx
         fi
     else
         print_status "Metasploit already present."
+    fi
+}
+########################################
+
+function install_vncviewer_osx
+{
+	if [ ! -e /usr/local/bin/vncviewer ]; then
+    	print_status "Installing VNC Shortcut for MSF"
+    	echo '#!/usr/bin/bash' >> /usr/local/bin/vncviewer
+    	echo 'open vnc://\$1' >> /usr/local/bin/vncviewer
+    	chmod +x /usr/local/bin/vncviewer
     fi
 }
 ########################################
@@ -686,6 +704,7 @@ if [ $INSTALL -eq 0 ]; then
         install_nmap_osx
         install_postgresql_osx
         install_msf_osx
+        install_vncviewer_osx
         install_armitage_osx
         install_plugins_osx
 
