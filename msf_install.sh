@@ -132,13 +132,8 @@ function check_for_brew_osx
             source  ~/.bash_profile
         fi
     else
-
         print_status "Installing Homebrew"
-<<<<<<< Updated upstream
-         /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-=======
-         /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
->>>>>>> Stashed changes
+        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         if [ "$(grep ":/usr/local/sbin" ~/.bash_profile -q)" ]; then
             print_good "Paths are properly set"
         else
@@ -291,7 +286,7 @@ function install_msf_osx
  port: 5432
  pool: 75
  timeout: 5' > /usr/local/share/metasploit-framework/config/database.yml
-        print_status "Setting environment variable in system profile; Password will be required."
+        print_status "Setting environment variable in system profile. Password will be required."
         sudo sh -c "echo export MSF_DATABASE_CONFIG=/usr/local/share/metasploit-framework/config/database.yml >> /etc/profile"
         echo "export MSF_DATABASE_CONFIG=/usr/local/share/metasploit-framework/config/database.yml" >> ~/.bash_profile
         source /etc/profile
@@ -323,7 +318,7 @@ function install_vncviewer_osx
 {
 	if [ ! -e /usr/local/bin/vncviewer ]; then
     	print_status "Installing VNC Shortcut for MSF"
-    	echo '#!/usr/bin/bash' >> /usr/local/bin/vncviewer
+    	echo '#!/bin/bash' >> /usr/local/bin/vncviewer
     	echo 'open vnc://\$1' >> /usr/local/bin/vncviewer
     	chmod +x /usr/local/bin/vncviewer
     fi
