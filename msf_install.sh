@@ -314,17 +314,6 @@ function install_msf_osx
 }
 ########################################
 
-function install_vncviewer_osx
-{
-	if [ ! -e /usr/local/bin/vncviewer ]; then
-    	print_status "Installing VNC Shortcut for MSF"
-    	echo '#!/bin/bash' >> /usr/local/bin/vncviewer
-    	echo 'open vnc://\$1' >> /usr/local/bin/vncviewer
-    	chmod +x /usr/local/bin/vncviewer
-    fi
-}
-########################################
-
 function install_plugins_osx
 {
     print_status "Installing additional Metasploit plugins"
@@ -699,7 +688,6 @@ if [ $INSTALL -eq 0 ]; then
         install_nmap_osx
         install_postgresql_osx
         install_msf_osx
-        install_vncviewer_osx
         install_armitage_osx
         install_plugins_osx
 
